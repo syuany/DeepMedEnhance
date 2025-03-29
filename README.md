@@ -1,1 +1,1 @@
-# DeepMedEnhance
+# MedicalImageDenoising

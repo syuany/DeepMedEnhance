@@ -1,0 +1,31 @@
+# 数据路径配置
+data_paths:
+  covid_raw: "data/raw/COVID/"
+  covid_processed: "data/processed/COVID_denoised/"
+
+# 预处理参数
+preprocessing:
+  patch_size: 128   # 分块尺寸
+  stride: 112       # 分块步长（重叠28像素）
+  noise_level: 25   # 高斯噪声标准差
+
+# 数据划分路径
+split_paths:
+  covid_train: "data/splits/covid_train.txt"
+  covid_test: "data/splits/covid_test.txt"
+
+# DataLoader参数
+dataloader:
+  batch_size: 16
+  num_workers: 4
+
+# 数据集划分配置
+splitting:
+  test_ratio: 0.2   # 测试集比例
+  seed: 42          # 随机种子保证可复现性
+
+# 路径配置
+split_paths:
+  root: "data/splits/"  # 划分文件根目录
+  covid_train: "data/splits/covid_train.txt"  # 新增
+  covid_test: "data/splits/covid_test.txt"

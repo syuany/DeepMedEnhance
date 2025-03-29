@@ -1,0 +1,18 @@
+model:
+  type: "SwinIR"
+  params:
+    in_channels: 1
+    embed_dim: 48      # 控制模型大小
+    depths: [4,4,4]    # 简化层数（原版为[6,6,6]）
+    num_heads: [4,4,4] # 减少注意力头数
+    window_size: 8     # 窗口大小需能被输入尺寸整除
+
+training:
+  epochs: 300
+  lr: 0.0001
+  batch_size: 4        # 显存敏感，需调小
+  early_stop: True
+  patience: 30
+  monitor: "psnr"
+
+data_config: "configs/data_config.yaml"

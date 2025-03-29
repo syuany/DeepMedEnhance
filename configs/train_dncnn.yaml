@@ -1,0 +1,19 @@
+# 模型配置
+model:
+  type: "DnCNN"
+  params:
+    in_channels: 1
+    num_layers: 17
+    num_features: 64
+
+# 训练参数
+training:
+  epochs: 100
+  lr: 0.001
+  save_interval: 10
+  early_stop: True  # 启用早停
+  patience: 15       # 容忍无改进的epoch数
+  monitor: "val_loss" # 监控指标（val_loss/psnr/ssim）
+
+# 数据配置引用
+data_config: "configs/data_config.yaml"

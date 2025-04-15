@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # mydata
-test/
+tests/
 data/
 experiments/
 results/

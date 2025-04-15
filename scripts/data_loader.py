@@ -25,8 +25,8 @@ class MedicalDataset(Dataset):
     
     def __getitem__(self, idx):
         data = np.load(self.data_paths[idx])
-        noisy = torch.from_numpy(data["noisy"])
-        clean = torch.from_numpy(data["clean"])
+        noisy = torch.from_numpy(data["noisy"].astype(np.float32))
+        clean = torch.from_numpy(data["clean"].astype(np.float32))
         
         if self.transform:
             # 合并做相同变换
@@ -66,7 +66,9 @@ def get_dataloader(config_path, mode="train", batch_size=None):
         dataset,
         batch_size=final_batch_size,
         shuffle=(mode == "train"),
-        num_workers=config["dataloader"]["num_workers"]
+        num_workers=config["dataloader"]["num_workers"],
+        pin_memory=True,  # 启用锁页内存
+        prefetch_factor=2  # 预加载批次
     )
     
     return loader

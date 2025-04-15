@@ -1,19 +1,22 @@
 # 模型配置
 model:
-  type: "DnCNN"
+  type: "LightsDnCNN"
   params:
     in_channels: 1
-    num_layers: 17
-    num_features: 64
+    num_layers: 9
+    num_features: 32
 
 # 训练参数
 training:
-  epochs: 100
+  epochs: 200
   lr: 0.001
   save_interval: 10
+  batch_size: 32
+  val_batch_size: 16
+  use_amp: True
   early_stop: True  # 启用早停
-  patience: 15       # 容忍无改进的epoch数
-  monitor: "val_loss" # 监控指标（val_loss/psnr/ssim）
+  patience: 20       # 容忍无改进的epoch数
+  monitor: "ssim" # 监控指标（val_loss/psnr/ssim）
 
 # 数据配置引用
 data_config: "configs/data_config.yaml"

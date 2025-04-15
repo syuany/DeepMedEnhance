@@ -2,16 +2,16 @@ import torch
 import torch.nn as nn
 import torch.nn.init as init
 
-class DnCNN(nn.Module):
-    def __init__(self, in_channels=1, num_layers=17, num_features=64):
+class LightDnCNN(nn.Module):
+    def __init__(self, in_channels=1, num_layers=9, num_features=32):
         """
-        DnCNN 去噪模型
+        轻量化DnCNN 去噪模型
         Args:
             in_channels (int): 输入通道数（医学图像通常为1）
-            num_layers (int): 网络层数（默认17层）
-            num_features (int): 中间层特征通道数
+            num_layers (int): 网络层数（默认优化为9层）
+            num_features (int): 中间层特征通道数（默认压缩至32）
         """
-        super(DnCNN, self).__init__()
+        super(LightDnCNN, self).__init__()
         layers = []
         
         # 第一层（Conv + ReLU）
@@ -28,8 +28,6 @@ class DnCNN(nn.Module):
         layers.append(nn.Conv2d(num_features, in_channels, kernel_size=3, padding=1))
         
         self.dncnn = nn.Sequential(*layers)
-        
-        # 权重初始化
         self._initialize_weights()
 
     def forward(self, x):
@@ -47,8 +45,9 @@ class DnCNN(nn.Module):
                 init.constant_(m.bias, 0)
 
 if __name__ == "__main__":
-    # 测试代码
-    model = DnCNN(in_channels=1)
-    x = torch.randn(1, 1, 128, 128)  # 模拟输入 (batch=1, channel=1, H=128, W=128)
+    # 测试轻量化模型
+    model = LightDnCNN(in_channels=1)
+    x = torch.randn(1, 1, 299, 299)  # 模拟COVID-19数据尺寸
     output = model(x)
-    print(f"输入尺寸: {x.shape}, 输出尺寸: {output.shape}")  # 应保持相同尺寸
+    print(f"输入尺寸: {x.shape}, 输出尺寸: {output.shape}")
+    print(f"总参数量: {sum(p.numel() for p in model.parameters())/1e3:.1f} K")  # 约65.5K参数

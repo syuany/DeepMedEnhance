@@ -9,9 +9,9 @@ model:
 training:
   epochs: 200
   lr: 0.001
-  save_interval: 25
+  save_interval: 10
   early_stop: True
-  patience: 25
+  patience: 15
   monitor: "ssim"  # 推荐监控SSIM
 
 # 数据配置引用

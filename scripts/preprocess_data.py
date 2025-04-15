@@ -31,7 +31,7 @@ def split_dataset(raw_dir, split_dir, test_ratio=0.2):
     
     return train_files, test_files
 
-def generate_patches(clean_img, patch_size, stride, transform, noise_level):
+def generate_patches(clean_img, patch_size, stride, noise_level):
     """生成带噪声的图片块"""
     patches = []
     h, w = clean_img.shape
@@ -50,8 +50,8 @@ def process_covid_ct(config_path="configs/data_config.yaml"):
     raw_dir = Path(config["data_paths"]["covid_raw"])
     split_dir = Path(config["split_paths"]["root"])
     processed_dir = Path(config["data_paths"]["covid_processed"])
+    stride = config['preprocessing']['stride']
     patch_size = config["preprocessing"]["patch_size"]
-    stride = config["preprocessing"]["stride"]
     noise_level = config["preprocessing"]["noise_level"]
     test_ratio = config["splitting"]["test_ratio"]
     
@@ -64,9 +64,9 @@ def process_covid_ct(config_path="configs/data_config.yaml"):
     # 图像预处理流水线
     transform = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.5], std=[0.5])
+        # transforms.Normalize(mean=[0.5], std=[0.5], inplace=True),
     ])
-    
+        
     # 分别处理训练集和测试集
     for dataset_type, originals in [("train", train_originals), ("test", test_originals)]:
         split_list = []
@@ -76,15 +76,19 @@ def process_covid_ct(config_path="configs/data_config.yaml"):
             clean = cv2.imread(str(img_file), cv2.IMREAD_GRAYSCALE)
             
             # 生成并保存所有块
-            for patch, noisy_patch, (y, x) in generate_patches(clean, patch_size, stride, transform, noise_level):
+            for patch, noisy_patch, (y, x) in generate_patches(clean, patch_size, stride, noise_level):
                 # 转换为Tensor
                 noisy_tensor = transform(noisy_patch)
                 clean_tensor = transform(patch)
+
+                noisy_float = noisy_tensor.numpy().astype(np.float32)
+                clean_float = clean_tensor.numpy().astype(np.float32)
                 
                 # 生成唯一文件名
                 patch_id = f"{img_stem}_{y}_{x}"
                 save_path = processed_dir / f"{patch_id}.npz"
-                np.savez(save_path, noisy=noisy_tensor.numpy(), clean=clean_tensor.numpy())
+                np.savez(save_path, noisy=noisy_float, clean=clean_float)
+
                 split_list.append(f"{patch_id}.npz")
         
         # 保存块级划分文件

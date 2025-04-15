@@ -5,9 +5,9 @@ data_paths:
 
 # 预处理参数
 preprocessing:
-  patch_size: 128   # 分块尺寸
-  stride: 112       # 分块步长（重叠28像素）
+  patch_size: 256   # 分块尺寸
   noise_level: 25   # 高斯噪声标准差
+  stride: 44
 
 # 数据划分路径
 split_paths:

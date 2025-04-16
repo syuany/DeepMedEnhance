@@ -8,6 +8,9 @@ tests/
 data/
 experiments/
 results/
+comparison/
+*/outputs/
+*/err/
 
 # C extensions
 *.so

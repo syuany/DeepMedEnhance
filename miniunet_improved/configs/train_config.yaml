@@ -1,0 +1,9 @@
+# configs/train_config.yaml
+data_dir: "data/COVID-19_Radiography_Dataset"
+log_dir: 'outputs/logs'
+batch_size: 8      # 原为8
+lr: 0.001           # 原为0.001 (+100%)
+weight_decay: 0.01  # 新增参数
+epochs: 200          # 适当增加总epoch
+use_scheduler: True # 启用学习率调度
+patience: 10
